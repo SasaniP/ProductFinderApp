@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1050218194466",
+    "project_id": "web-scraper-finder",
+    "storage_bucket": "web-scraper-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050218194466:android:baf5bf3d0a6c24d14ecc7b",
+        "android_client_info": {
+          "package_name": "com.example.internetsearch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050218194466-3c181gg16rbdh523nmqh0n19d8tv29na.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbbUsNMvFF4sDHKgZw82Ye_D0YASsiEPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050218194466-3c181gg16rbdh523nmqh0n19d8tv29na.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
