@@ -3,7 +3,6 @@ package com.example.internetsearch;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,8 +43,7 @@ public class TestHomeFragment extends Fragment {
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
-    int j = 0;
-    int count;
+
 
 
 
@@ -63,6 +61,7 @@ public class TestHomeFragment extends Fragment {
         second_textview = view.findViewById(R.id.second_textview);
         results_number = view.findViewById(R.id.results_number);
         mRecyclerView = view.findViewById(R.id.recycler_view);
+
 
         //search_webview.setMovementMethod(new ScrollingMovementMethod());
 
@@ -156,6 +155,7 @@ public class TestHomeFragment extends Fragment {
                 String Product = et_search.getText().toString().substring(0,1).toUpperCase() + et_search.getText().toString().substring(1);
                 String searchQuery="buy "+et_search.getText().toString()+ " in " + userLocation ;
                 top_textview.setText(Product + " in " + userLocation);
+
                 searchGoogle(searchQuery);
 
             }
@@ -166,14 +166,15 @@ public class TestHomeFragment extends Fragment {
     private void searchGoogle(String searchQuery) {
         // search over your preferred search engine
         //String searchQuery="buy "+et_search.getText().toString()+ " in " + userLocation ;
-        String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery /* + "&num=50"*/;
+        String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery  + "&num=50";
+
 
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    count=0;
+
 
                     Document doc = Jsoup.connect(searchUrl).get();
                     //String html = doc.html();
@@ -193,20 +194,45 @@ public class TestHomeFragment extends Fragment {
                             text = text.replace(" ", "");
                         }   
                         linkSet.add(text);
-                        count = count+1;
                         ArrayList<String> linkList = new ArrayList<>(linkSet);
                         //printLinkList(linkList);
 
-                        //------------ addition of filter ------------------
-                        LinkScraper scraper = new LinkScraper();
-                        scraper.execute(linkList);
-                        //--------------------------------------------------
+                    //--------------------------- addition of filter -------------------------------
 
+                        HashSet<String> private_linkSet = new HashSet<>();
+                        for (String private_link : linkList) {
+                            try {
+                                Document Checkdoc = Jsoup.connect(private_link).get();
+                                String html = Checkdoc.html();
+                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")
+                                        || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
+                                    private_linkSet.add(private_link);
+                                } else {
+                                    //private_linkSet.add("Not available");
+                                    //count = count + 1;
+                                }
+                            } catch (IOException e) {
+                                //private_links.add("Not available");
+                            }
+                        }
+                        ArrayList<String> private_linkList = new ArrayList<>(private_linkSet);
+                    //------------------------------------------------------------------------------
 
+                        getActivity().runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+
+                                mLayoutManager=new LinearLayoutManager(getContext());
+                                mAdapter=new MainAdapter(private_linkList);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                                mRecyclerView.setAdapter(mAdapter);
+                                //results_number.setText(private_linkList.size() + " results appeared ");
+                            }
+                        });
                         //resultBuilder.append(text).append("\n");
                         //search_webview.setText(resultBuilder.toString());
+                        results_number.setText(private_linkList.size() + " results appeared ");
                     }
-                    results_number.setText(count + " results appeared ");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -215,7 +241,7 @@ public class TestHomeFragment extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
 
-    private class LinkScraper extends AsyncTask<ArrayList<String>, Void, StringBuilder> {
+    /*private class LinkScraper extends AsyncTask<ArrayList<String>, Void, StringBuilder> {
 
         @Override
         protected StringBuilder doInBackground(ArrayList<String>... arrayLists) {
@@ -252,10 +278,10 @@ public class TestHomeFragment extends Fragment {
             second_textview.setText(resultBuilder.toString());
             ArrayList<String> stockedLinkList = new ArrayList<>(stockedLinkSet);
 
-            /*mLayoutManager = new LinearLayoutManager(getContext());
+            mLayoutManager = new LinearLayoutManager(getContext());
             mAdapter = new MainAdapter(stockedLinkList);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setAdapter(mAdapter);*/
+            mRecyclerView.setAdapter(mAdapter);
 
             if (j == count){
                 mLayoutManager = new LinearLayoutManager(getContext());
@@ -265,7 +291,7 @@ public class TestHomeFragment extends Fragment {
 
             }
 
-            /*new Thread(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     getActivity().runOnUiThread(new Runnable() {
@@ -278,10 +304,10 @@ public class TestHomeFragment extends Fragment {
                         }
                     });
                 }
-            });*/
+            });
         }
 
-    }
+    }*/
     //----------------------------------------------------------------------------------------------
 }
 
