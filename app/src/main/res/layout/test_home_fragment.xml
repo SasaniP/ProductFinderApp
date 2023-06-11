@@ -57,7 +57,7 @@
                 <EditText
                     android:id="@+id/et_search"
                     android:layout_width="260dp"
-                    android:layout_height="30dp"
+                    android:layout_height="20dp"
                     android:autofillHints=""
                     android:background="@drawable/rounded_edittext"
                     android:backgroundTint="#DCD8D8"
@@ -136,13 +136,16 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp">
 
-            <TextView
-                android:id="@+id/second_textview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center" />
+            <ProgressBar
+                android:id="@+id/pb"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="370dp"
+                android:layout_height="5dp"
+                />
 
         </LinearLayout>
 
@@ -150,7 +153,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="511dp" />
+            android:layout_height="577dp" />
 
     </LinearLayout>
 

@@ -1,6 +1,8 @@
 package com.example.internetsearch;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -28,24 +31,27 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TestHomeFragment extends Fragment {
 
+    ProgressBar progress_bar;
     EditText et_search;
     ImageButton b_search;
-    String userLocation = "Sri Lanka";
     TextView textView;
     TextView results_number;
     TextView top_textview;
-    TextView second_textview;
+
+    String userLocation = "Sri Lanka";
     ArrayList<String> arrayList;
+
     Dialog dialog;
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
 
-
-
+    int counter;
 
 
     @Override
@@ -56,15 +62,10 @@ public class TestHomeFragment extends Fragment {
 
         et_search = view.findViewById(R.id.et_search);
         b_search = view.findViewById(R.id.b_search);
-        //search_webview=view.findViewById(R.id.search_webview);
         top_textview = view.findViewById(R.id.top_textview);
-        second_textview = view.findViewById(R.id.second_textview);
         results_number = view.findViewById(R.id.results_number);
         mRecyclerView = view.findViewById(R.id.recycler_view);
-
-
-        //search_webview.setMovementMethod(new ScrollingMovementMethod());
-
+        progress_bar = view.findViewById(R.id.pb);
 
 
 // --------------------------------------- Fetch User Location------------------------------------//
@@ -144,75 +145,63 @@ public class TestHomeFragment extends Fragment {
         });
 // -----------------------------------------------------------------------------------------------//
 
-
-
 // ----------------------------------- Search Mechanism ------------------------------------------//
-        //sriLankanUrls = new ArrayList<>();
 
         b_search.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String Product = et_search.getText().toString().substring(0,1).toUpperCase() + et_search.getText().toString().substring(1);
+                String Product = et_search.getText().toString().substring(0,1).toUpperCase() + et_search.getText().toString().substring(1).toLowerCase();
                 String searchQuery="buy "+et_search.getText().toString()+ " in " + userLocation ;
                 top_textview.setText(Product + " in " + userLocation);
-
                 searchGoogle(searchQuery);
-
             }
         });
         return view;
-
     }
+    //----------------------------------------------------------------------------------------------
     private void searchGoogle(String searchQuery) {
-        // search over your preferred search engine
-        //String searchQuery="buy "+et_search.getText().toString()+ " in " + userLocation ;
         String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery  + "&num=50";
 
-
-
         new Thread(new Runnable() {
+            //@SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 try {
-
-
                     Document doc = Jsoup.connect(searchUrl).get();
-                    //String html = doc.html();
-                    //Files.write(Paths.get("/sdcard/file1.html"), html.getBytes());
                     Elements links = doc.select("cite");
-
                     final HashSet<String> linkSet = new HashSet<>();
 
+                    for (int j = 0; j < links.size(); j++) {
+                        String text = links.get(j).text();
+                        //String text = link.text();
 
-
-                    //final StringBuilder resultBuilder = new StringBuilder();
-                    for (Element link : links) {
-
-                        String text = link.text();
+                    /*for (Element link : links) {
+                        String text = link.text();*/
                         if (text.contains("›")) {
                             text = text.replace(" › ", "/");
                             text = text.replace(" ", "");
                         }   
                         linkSet.add(text);
                         ArrayList<String> linkList = new ArrayList<>(linkSet);
-                        //printLinkList(linkList);
 
                     //--------------------------- addition of filter -------------------------------
-
                         HashSet<String> private_linkSet = new HashSet<>();
-                        for (String private_link : linkList) {
+                        for (int i = 0; i < linkList.size(); i++) {
+                            String private_link = linkList.get(i);
+                        /*}
+                        for (String private_link : linkList) {*/
                             try {
                                 Document Checkdoc = Jsoup.connect(private_link).get();
                                 String html = Checkdoc.html();
                                 if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")
                                         || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
                                     private_linkSet.add(private_link);
-                                } else {
-                                    //private_linkSet.add("Not available");
-                                    //count = count + 1;
+                                }
+                                else {
+                                    progress();
                                 }
                             } catch (IOException e) {
-                                //private_links.add("Not available");
+                                //progress();
                             }
                         }
                         ArrayList<String> private_linkList = new ArrayList<>(private_linkSet);
@@ -221,17 +210,13 @@ public class TestHomeFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run(){
-
                                 mLayoutManager=new LinearLayoutManager(getContext());
                                 mAdapter=new MainAdapter(private_linkList);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setAdapter(mAdapter);
-                                //results_number.setText(private_linkList.size() + " results appeared ");
                             }
                         });
-                        //resultBuilder.append(text).append("\n");
-                        //search_webview.setText(resultBuilder.toString());
-                        results_number.setText(private_linkList.size() + " results appeared ");
+                        results_number.setText(private_linkList.size() + getString(R.string.results_appeared));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -241,73 +226,21 @@ public class TestHomeFragment extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
 
-    /*private class LinkScraper extends AsyncTask<ArrayList<String>, Void, StringBuilder> {
-
-        @Override
-        protected StringBuilder doInBackground(ArrayList<String>... arrayLists) {
-            ArrayList<String> private_links = arrayLists[0];
-            StringBuilder resultBuilder = new StringBuilder();
-
-            for (String private_link : private_links) {
-                try {
-                    Document doc = Jsoup.connect(private_link).get();
-                    String html = doc.html();
-                    if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")) {
-                        resultBuilder.append(private_link).append("\n");
-                    } else {
-                        resultBuilder.append("Not available").append("\n");
-                    }
-                } catch (IOException e) {
-                    //String mess = e.getMessage();
-                    //Links_text.setText(mess);
+    private void progress(){
+        counter = 0;
+        Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                counter++;
+                progress_bar.setProgress(counter);
+                if (counter ==50) {
+                    t.cancel();
                 }
             }
-            return resultBuilder;
-        }
-
-        @Override
-        protected void onPostExecute(StringBuilder resultBuilder) {
-            super.onPostExecute(resultBuilder);
-
-
-            //Links_text.setText(resultBuilder.toString());
-            final HashSet<String> stockedLinkSet = new HashSet<>();
-            //ArrayList<String> stockedLinkList = new ArrayList<>();
-            stockedLinkSet.add(resultBuilder.toString());
-            j = j+1;
-            second_textview.setText(resultBuilder.toString());
-            ArrayList<String> stockedLinkList = new ArrayList<>(stockedLinkSet);
-
-            mLayoutManager = new LinearLayoutManager(getContext());
-            mAdapter = new MainAdapter(stockedLinkList);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setAdapter(mAdapter);
-
-            if (j == count){
-                mLayoutManager = new LinearLayoutManager(getContext());
-                mAdapter = new MainAdapter(stockedLinkList);
-                mRecyclerView.setLayoutManager(mLayoutManager);
-                mRecyclerView.setAdapter(mAdapter);
-
-            }
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mLayoutManager = new LinearLayoutManager(getContext());
-                            mAdapter = new MainAdapter(stockedLinkList);
-                            mRecyclerView.setLayoutManager(mLayoutManager);
-                            mRecyclerView.setAdapter(mAdapter);
-                        }
-                    });
-                }
-            });
-        }
-
-    }*/
+        };
+        t.schedule(tt,0,50);
+    }
     //----------------------------------------------------------------------------------------------
 }
 
