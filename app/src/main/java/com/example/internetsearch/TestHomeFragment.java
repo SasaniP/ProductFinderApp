@@ -42,6 +42,7 @@ public class TestHomeFragment extends Fragment {
     TextView textView;
     TextView results_number;
     TextView top_textview;
+    TextView ShareLocation;
 
     String userLocation = "Sri Lanka";
     ArrayList<String> arrayList;
@@ -66,6 +67,7 @@ public class TestHomeFragment extends Fragment {
         results_number = view.findViewById(R.id.results_number);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         progress_bar = view.findViewById(R.id.pb);
+        ShareLocation = view.findViewById(R.id.ShareLocation);
 
 
 // --------------------------------------- Fetch User Location------------------------------------//
@@ -163,17 +165,21 @@ public class TestHomeFragment extends Fragment {
         String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery  + "&num=50";
 
         new Thread(new Runnable() {
-            //@SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 try {
                     Document doc = Jsoup.connect(searchUrl).get();
+
                     Elements links = doc.select("cite");
-                    final HashSet<String> linkSet = new HashSet<>();
+                    Elements classes = doc.select("h3");
+
+                    final ArrayList<String> linkSet = new ArrayList<>();
+                    final ArrayList<String> classSet = new ArrayList<>();
 
                     for (int j = 0; j < links.size(); j++) {
                         String text = links.get(j).text();
                         //String text = link.text();
+                        String class_name = classes.get(j).text();
 
                     /*for (Element link : links) {
                         String text = link.text();*/
@@ -182,12 +188,17 @@ public class TestHomeFragment extends Fragment {
                             text = text.replace(" ", "");
                         }   
                         linkSet.add(text);
+                        classSet.add(class_name);
                         ArrayList<String> linkList = new ArrayList<>(linkSet);
+                        ArrayList<String> classList = new ArrayList<>(classSet);
 
                     //--------------------------- addition of filter -------------------------------
                         HashSet<String> private_linkSet = new HashSet<>();
+                        HashSet<String> private_classSet = new HashSet<>();
+
                         for (int i = 0; i < linkList.size(); i++) {
                             String private_link = linkList.get(i);
+                            String class_link = classList.get(i);
                         /*}
                         for (String private_link : linkList) {*/
                             try {
@@ -196,6 +207,7 @@ public class TestHomeFragment extends Fragment {
                                 if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")
                                         || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
                                     private_linkSet.add(private_link);
+                                    private_classSet.add(class_link);
                                 }
                                 else {
                                     progress();
@@ -205,13 +217,14 @@ public class TestHomeFragment extends Fragment {
                             }
                         }
                         ArrayList<String> private_linkList = new ArrayList<>(private_linkSet);
+                        ArrayList<String> private_classList = new ArrayList<>(private_classSet);
                     //------------------------------------------------------------------------------
 
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run(){
                                 mLayoutManager=new LinearLayoutManager(getContext());
-                                mAdapter=new MainAdapter(private_linkList);
+                                mAdapter=new MainAdapter(private_linkList,private_classList);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setAdapter(mAdapter);
                             }
