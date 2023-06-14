@@ -3,11 +3,14 @@ package com.example.internetsearch;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -172,14 +175,16 @@ public class TestHomeFragment extends Fragment {
 
                     Elements links = doc.select("cite");
                     Elements classes = doc.select("span.VuuXrf");
+                    Elements images = doc.select("img.XNo5Ab");
 
                     final ArrayList<String> linkSet = new ArrayList<>();
                     final ArrayList<String> classSet = new ArrayList<>();
+                    final ArrayList<String> iconSet = new ArrayList<>();
 
                     for (int j = 0; j < links.size(); j++) {
                         String text = links.get(j).text();
-                        //String text = link.text();
                         String class_name = classes.get(j).text();
+                        String base64String = images.get(j).absUrl("src");
 
                     /*for (Element link : links) {
                         String text = link.text();*/
@@ -189,16 +194,26 @@ public class TestHomeFragment extends Fragment {
                         }   
                         linkSet.add(text);
                         classSet.add(class_name);
+                        iconSet.add(base64String);
+
                         ArrayList<String> linkList = new ArrayList<>(linkSet);
                         ArrayList<String> classList = new ArrayList<>(classSet);
 
+                        //ArrayList<String> iconList = new ArrayList<>(iconSet);
+
+
                     //--------------------------- addition of filter -------------------------------
-                        HashSet<String> private_linkSet = new HashSet<>();
-                        HashSet<String> private_classSet = new HashSet<>();
+                        final HashSet<String> private_linkSet = new HashSet<>();
+                        final HashSet<String> private_classSet = new HashSet<>();
+
+                        final HashSet<Bitmap> private_iconSet = new HashSet<>();
+
 
                         for (int i = 0; i < linkList.size(); i++) {
                             String private_link = linkList.get(i);
                             String class_link = classList.get(i);
+
+                            String icon_link = iconSet.get(i);
                         /*}
                         for (String private_link : linkList) {*/
                             try {
@@ -208,6 +223,11 @@ public class TestHomeFragment extends Fragment {
                                         || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
                                     private_linkSet.add(private_link);
                                     private_classSet.add(class_link);
+
+                                    String base64Image = icon_link.split(",")[1];
+                                    byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+                                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                    private_iconSet.add(decodedByte);
                                 }
                                 else {
                                     progress();
@@ -218,13 +238,15 @@ public class TestHomeFragment extends Fragment {
                         }
                         ArrayList<String> private_linkList = new ArrayList<>(private_linkSet);
                         ArrayList<String> private_classList = new ArrayList<>(private_classSet);
+                        ArrayList<Bitmap> private_iconList = new ArrayList<>(private_iconSet);
+
                     //------------------------------------------------------------------------------
 
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run(){
                                 mLayoutManager=new LinearLayoutManager(getContext());
-                                mAdapter=new MainAdapter(private_linkList,private_classList);
+                                mAdapter=new MainAdapter(private_linkList,private_classList,private_iconList);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setAdapter(mAdapter);
                             }
