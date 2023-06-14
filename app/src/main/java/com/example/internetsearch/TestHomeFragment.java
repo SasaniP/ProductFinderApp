@@ -171,7 +171,7 @@ public class TestHomeFragment extends Fragment {
                     Document doc = Jsoup.connect(searchUrl).get();
 
                     Elements links = doc.select("cite");
-                    Elements classes = doc.select("h3");
+                    Elements classes = doc.select("span.VuuXrf");
 
                     final ArrayList<String> linkSet = new ArrayList<>();
                     final ArrayList<String> classSet = new ArrayList<>();
@@ -204,7 +204,7 @@ public class TestHomeFragment extends Fragment {
                             try {
                                 Document Checkdoc = Jsoup.connect(private_link).get();
                                 String html = Checkdoc.html();
-                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")
+                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW") || html.contains("Select options")
                                         || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
                                     private_linkSet.add(private_link);
                                     private_classSet.add(class_link);
