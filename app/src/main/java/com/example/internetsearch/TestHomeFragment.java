@@ -181,19 +181,30 @@ public class TestHomeFragment extends Fragment {
                     final ArrayList<String> classSet = new ArrayList<>();
                     final ArrayList<String> iconSet = new ArrayList<>();
 
-                    for (int j = 0; j < links.size(); j++) {
+                    for (int j = 0; j < images.size(); j++) { //TODO changed from links.size to image.size
                         String text = links.get(j).text();
                         String class_name = classes.get(j).text();
                         String base64String = images.get(j).absUrl("src");
 
                     /*for (Element link : links) {
                         String text = link.text();*/
+                        //ShareLocation.setText(String.valueOf(count));
                         if (text.contains("›")) {
                             text = text.replace(" › ", "/");
                             text = text.replace(" ", "");
-                        }   
-                        linkSet.add(text);
-                        classSet.add(class_name);
+                        }
+                        if (linkSet.contains(text)){
+                        }
+                        else{
+                            linkSet.add(text);
+                        }
+                        //linkSet.add(text);
+                        if (classSet.contains(class_name)){
+                        }
+                        else{
+                            classSet.add(class_name);
+                        }
+                        //classSet.add(class_name);
                         iconSet.add(base64String);
 
                         ArrayList<String> linkList = new ArrayList<>(linkSet);
