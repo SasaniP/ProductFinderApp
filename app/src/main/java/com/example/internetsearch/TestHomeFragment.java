@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,7 @@ public class TestHomeFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         progress_bar = view.findViewById(R.id.pb);
         ShareLocation = view.findViewById(R.id.ShareLocation);
+
 
 
 // --------------------------------------- Fetch User Location------------------------------------//
@@ -165,73 +167,73 @@ public class TestHomeFragment extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
     private void searchGoogle(String searchQuery) {
-        String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery  + "&num=50";
-
+        String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery  + "&num=30";
+        Log.d("--timing", "1" );
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Document doc = Jsoup.connect(searchUrl).get();
-
-                    Elements links = doc.select("cite");
+                    Log.d("--timing", "2" );
+                    Elements links = doc.select("cite.apx8Vc.qLRx3b.tjvcx.GvPZzd.cHaqb");
                     Elements classes = doc.select("span.VuuXrf");
                     Elements images = doc.select("img.XNo5Ab");
-
+                    Log.d("--timing", "3" );
                     final ArrayList<String> linkSet = new ArrayList<>();
                     final ArrayList<String> classSet = new ArrayList<>();
                     final ArrayList<String> iconSet = new ArrayList<>();
 
-                    for (int j = 0; j < images.size(); j++) { //TODO changed from links.size to image.size
-                        String text = links.get(j).text();
-                        String class_name = classes.get(j).text();
+                    int linknum = 0;
+                    int clanum = 0;
+                    int iconum = 0;
+                    Log.d("--timing", "4" );
+                    for (int j = 0; j < images.size(); j++) {
+                        int f=j*2;
+                        String text = links.get(f).text();
+                        String class_name = classes.get(f).text();
                         String base64String = images.get(j).absUrl("src");
 
-                    /*for (Element link : links) {
-                        String text = link.text();*/
-                        //ShareLocation.setText(String.valueOf(count));
                         if (text.contains("›")) {
                             text = text.replace(" › ", "/");
                             text = text.replace(" ", "");
                         }
-                        if (linkSet.contains(text)){
-                        }
-                        else{
-                            linkSet.add(text);
-                        }
-                        //linkSet.add(text);
-                        if (classSet.contains(class_name)){
-                        }
-                        else{
-                            classSet.add(class_name);
-                        }
-                        //classSet.add(class_name);
+                        linkSet.add(text);
+                        classSet.add(class_name);
                         iconSet.add(base64String);
 
-                        ArrayList<String> linkList = new ArrayList<>(linkSet);
-                        ArrayList<String> classList = new ArrayList<>(classSet);
 
-                        //ArrayList<String> iconList = new ArrayList<>(iconSet);
+
+
+                        //final ArrayList<String> linkList = new ArrayList<>(linkSet);
+                        //final ArrayList<String> classList = new ArrayList<>(classSet);
+                        //final ArrayList<String> iconList = new ArrayList<>(iconSet);
+
+                       /* linknum = linkList.size();
+                        clanum = classList.size();
+                        iconum = iconList.size(); */
+
 
 
                     //--------------------------- addition of filter -------------------------------
-                        final HashSet<String> private_linkSet = new HashSet<>();
-                        final HashSet<String> private_classSet = new HashSet<>();
+                        final ArrayList<String> private_linkSet = new ArrayList<>();
+                        final ArrayList<String> private_classSet = new ArrayList<>();
 
-                        final HashSet<Bitmap> private_iconSet = new HashSet<>();
+                        final ArrayList<Bitmap> private_iconSet = new ArrayList<>();
 
 
-                        for (int i = 0; i < linkList.size(); i++) {
-                            String private_link = linkList.get(i);
-                            String class_link = classList.get(i);
-
+                        for (int i = 0; i < linkSet.size(); i++) { //changed from linkList to iconList
+                            String private_link = linkSet.get(i);
+                            String class_link = classSet.get(i);
                             String icon_link = iconSet.get(i);
                         /*}
                         for (String private_link : linkList) {*/
                             try {
                                 Document Checkdoc = Jsoup.connect(private_link).get();
                                 String html = Checkdoc.html();
-                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW") || html.contains("Select options")
-                                        || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
+                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")
+                                        || html.contains("Select options") || html.contains("Read More") || html.contains("add-to-cart")
+                                        || html.contains("Add to cart") || html.contains("quick-view") || html.contains("ADD TO CART")
+                                        || html.contains("Quick View") || html.contains("daraz") || html.contains("grid")) {
                                     private_linkSet.add(private_link);
                                     private_classSet.add(class_link);
 
@@ -251,8 +253,14 @@ public class TestHomeFragment extends Fragment {
                         ArrayList<String> private_classList = new ArrayList<>(private_classSet);
                         ArrayList<Bitmap> private_iconList = new ArrayList<>(private_iconSet);
 
-                    //------------------------------------------------------------------------------
 
+
+
+                        //------------------------------------------------------------------------------
+
+                        int finalLinknum = linknum;
+                        int finalClanum = clanum;
+                        int finalIconum = iconum;
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run(){
@@ -260,10 +268,15 @@ public class TestHomeFragment extends Fragment {
                                 mAdapter=new MainAdapter(private_linkList,private_classList,private_iconList);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setAdapter(mAdapter);
+
+                                ShareLocation.setText("l= "+ String.valueOf(finalLinknum) +"c= "+ String.valueOf(finalClanum)+"i= "+ String.valueOf(finalIconum) );
+
                             }
                         });
                         results_number.setText(private_linkList.size() + getString(R.string.results_appeared));
+
                     }
+                    Log.d("--timing", "5" );
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
