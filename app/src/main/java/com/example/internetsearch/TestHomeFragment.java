@@ -1,8 +1,6 @@
 package com.example.internetsearch;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +27,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class TestHomeFragment extends Fragment {
 
@@ -55,7 +53,12 @@ public class TestHomeFragment extends Fragment {
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
 
+    DBHepler db;
+
     int counter;
+    View view;
+
+
 
 
     @Override
@@ -64,6 +67,7 @@ public class TestHomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.test_home_fragment, container, false);
 
+
         et_search = view.findViewById(R.id.et_search);
         b_search = view.findViewById(R.id.b_search);
         top_textview = view.findViewById(R.id.top_textview);
@@ -71,6 +75,10 @@ public class TestHomeFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         progress_bar = view.findViewById(R.id.pb);
         ShareLocation = view.findViewById(R.id.ShareLocation);
+
+        db=new DBHepler(getContext());
+
+
 
 
 // --------------------------------------- Fetch User Location------------------------------------//
@@ -106,7 +114,7 @@ public class TestHomeFragment extends Fragment {
                 //Set custom dialog
                 dialog.setContentView(R.layout.dialog_searchable_spinner);
                 //Set custom height and width
-                dialog.getWindow().setLayout( 650, 800);
+                dialog.getWindow().setLayout( 1000, 1350);
                 //Set transparent background
                 dialog.getWindow().setBackgroundDrawable (new ColorDrawable(Color.TRANSPARENT));
                 //Show dialog
@@ -155,83 +163,94 @@ public class TestHomeFragment extends Fragment {
         b_search.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String Product = et_search.getText().toString().substring(0,1).toUpperCase() + et_search.getText().toString().substring(1).toLowerCase();
-                String searchQuery="buy "+et_search.getText().toString()+ " in " + userLocation ;
-                top_textview.setText(Product + " in " + userLocation);
-                searchGoogle(searchQuery);
+                String et_sear_text = et_search.getText().toString();
+                try {
+                    String Product = et_sear_text.substring(0,1).toUpperCase() + et_sear_text.substring(1).toLowerCase();
+                    String searchQuery="Buy "+et_search.getText().toString()+ " in " + userLocation ;
+                    top_textview.setText(Product + " in " + userLocation);
+                    searchGoogle(searchQuery);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("df1",searchQuery);
+                    getParentFragmentManager().setFragmentResult("dataFromHome",bundle);
+                    Boolean  checkinsertData=db.insertuserData(searchQuery);
+                /*if (checkinsertData==true){
+                    Toast.makeText(MainActivity.this, "New Data Inserted", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "new Data Not Inserted!!", Toast.LENGTH_SHORT).show();
+                }*/
+                } catch(StringIndexOutOfBoundsException e) {
+                    et_search.setError("Search query cannot be empty");
+                    et_search.requestFocus();
+                }
+
+                //String Product = et_search.getText().toString().substring(0,1).toUpperCase() + et_search.getText().toString().substring(1).toLowerCase();
             }
         });
         return view;
     }
     //----------------------------------------------------------------------------------------------
     private void searchGoogle(String searchQuery) {
-        String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery  + "&num=50";
-
+        String searchUrl = "https://www.google.com/search" + "?q=" + searchQuery/*  + "&num=30"*/;
+        Log.d("--timing", "1" );
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Document doc = Jsoup.connect(searchUrl).get();
-
-                    Elements links = doc.select("cite");
+                    Log.d("--timing", "2" );
+                    Elements links = doc.select("cite.apx8Vc.qLRx3b.tjvcx.GvPZzd.cHaqb");
                     Elements classes = doc.select("span.VuuXrf");
                     Elements images = doc.select("img.XNo5Ab");
-
+                    Log.d("--timing", "3" );
                     final ArrayList<String> linkSet = new ArrayList<>();
                     final ArrayList<String> classSet = new ArrayList<>();
                     final ArrayList<String> iconSet = new ArrayList<>();
 
-                    for (int j = 0; j < images.size(); j++) { //TODO changed from links.size to image.size
-                        String text = links.get(j).text();
-                        String class_name = classes.get(j).text();
+                    int linknum = 0;
+                    int clanum = 0;
+                    int iconum = 0;
+                    Log.d("--timing", "4" );
+                    for (int j = 0; j < images.size(); j++) {
+                        int f=j*2;
+                        String text = links.get(f).text();
+                        String class_name = classes.get(f).text();
                         String base64String = images.get(j).absUrl("src");
 
-                    /*for (Element link : links) {
-                        String text = link.text();*/
-                        //ShareLocation.setText(String.valueOf(count));
                         if (text.contains("›")) {
                             text = text.replace(" › ", "/");
                             text = text.replace(" ", "");
                         }
-                        if (linkSet.contains(text)){
-                        }
-                        else{
-                            linkSet.add(text);
-                        }
-                        //linkSet.add(text);
-                        if (classSet.contains(class_name)){
-                        }
-                        else{
-                            classSet.add(class_name);
-                        }
-                        //classSet.add(class_name);
+                        linkSet.add(text);
+                        classSet.add(class_name);
                         iconSet.add(base64String);
 
-                        ArrayList<String> linkList = new ArrayList<>(linkSet);
-                        ArrayList<String> classList = new ArrayList<>(classSet);
-
-                        //ArrayList<String> iconList = new ArrayList<>(iconSet);
-
+                        //final ArrayList<String> linkList = new ArrayList<>(linkSet);
+                        //final ArrayList<String> classList = new ArrayList<>(classSet);
+                        //final ArrayList<String> iconList = new ArrayList<>(iconSet);
 
                     //--------------------------- addition of filter -------------------------------
-                        final HashSet<String> private_linkSet = new HashSet<>();
-                        final HashSet<String> private_classSet = new HashSet<>();
+                        final ArrayList<String> private_linkSet = new ArrayList<>();
+                        final ArrayList<String> private_classSet = new ArrayList<>();
+                        final ArrayList<Bitmap> private_iconSet = new ArrayList<>();
 
-                        final HashSet<Bitmap> private_iconSet = new HashSet<>();
-
-
-                        for (int i = 0; i < linkList.size(); i++) {
-                            String private_link = linkList.get(i);
-                            String class_link = classList.get(i);
-
+                        for (int i = 0; i < linkSet.size(); i++) { //changed from linkList to iconList
+                            linknum=linkSet.size();
+                            String private_link = linkSet.get(i);
+                            String class_link = classSet.get(i);
                             String icon_link = iconSet.get(i);
                         /*}
                         for (String private_link : linkList) {*/
                             try {
                                 Document Checkdoc = Jsoup.connect(private_link).get();
                                 String html = Checkdoc.html();
-                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW") || html.contains("Select options")
-                                        || html.contains("add-to-cart") || html.contains("Add to cart") || html.contains("quick-view") ) {
+                                if (html.contains("Buy Now") || html.contains("add to cart") || html.contains("BUY NOW")
+                                        || html.contains("Select options") || html.contains("Read More") || html.contains("add-to-cart")
+                                        || html.contains("Add to cart") || html.contains("quick-view") || html.contains("ADD TO CART")
+                                        || html.contains("Quick View") || html.contains("daraz") || (html.contains("grid")
+                                        && html.contains(et_search.getText().toString()))){
                                     private_linkSet.add(private_link);
                                     private_classSet.add(class_link);
 
@@ -251,7 +270,13 @@ public class TestHomeFragment extends Fragment {
                         ArrayList<String> private_classList = new ArrayList<>(private_classSet);
                         ArrayList<Bitmap> private_iconList = new ArrayList<>(private_iconSet);
 
-                    //------------------------------------------------------------------------------
+
+
+
+                        //------------------------------------------------------------------------------
+
+
+                        int finalLinknum = linknum;
 
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
@@ -260,10 +285,13 @@ public class TestHomeFragment extends Fragment {
                                 mAdapter=new MainAdapter(private_linkList,private_classList,private_iconList);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setAdapter(mAdapter);
+
+                                results_number.setText(private_linkList.size() + " out of " + finalLinknum + getString(R.string.results_appeared));
                             }
                         });
-                        results_number.setText(private_linkList.size() + getString(R.string.results_appeared));
+                       // results_number.setText(private_linkList.size() + " out of " + linknum + getString(R.string.results_appeared));
                     }
+                    Log.d("--timing", "5" );
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -271,6 +299,9 @@ public class TestHomeFragment extends Fragment {
         }).start();
     }
     //----------------------------------------------------------------------------------------------
+
+
+    //---------------------------Progress Bar Implementation----------------------------------------
 
     private void progress(){
         counter = 0;
@@ -288,6 +319,12 @@ public class TestHomeFragment extends Fragment {
         t.schedule(tt,0,50);
     }
     //----------------------------------------------------------------------------------------------
+
+
+    //--------------------------- Search Recent Suggestions ----------------------------------------
+
+
+
 }
 
 

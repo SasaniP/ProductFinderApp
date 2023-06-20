@@ -16,16 +16,29 @@
         android:theme="@style/Theme.InternetSearch"
         tools:targetApi="31">
         <activity
-            android:name=".listview_of_links"
-            android:exported="false"
-            android:label="@string/title_activity_listview_of_links"
-            android:theme="@style/Theme.InternetSearch.NoActionBar">
+            android:name=".search_history_page"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
+            android:name=".cart_page"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
             android:name=".TestHomeFragment"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ProfileFragment"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -43,16 +56,19 @@
         <activity
             android:name=".SplashScreen"
             android:exported="true"
-            android:theme="@style/SplashScreen" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:theme="@style/SplashScreenTheme">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"/>
         <activity
             android:name=".signup_page"
             android:exported="true" />

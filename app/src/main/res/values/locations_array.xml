@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="input_locations">
+        <item>Akkaraipattu</item>
+        <item>Ampara</item>
+        <item>Anuradhapura</item>
+        <item>Badulla</item>
+        <item>Balangoda</item>
+        <item>Bandarawela</item>
+        <item>Batticaloa</item>
+        <item>Chavakachcheri</item>
+        <item>Chilaw</item>
+        <item>Colombo</item>
+        <item>Dambulla</item>
+        <item>Dehiwela-Mount Lavinia</item>
+        <item>Embilipitiya</item>
+        <item>Eravur</item>
+        <item>Galle</item>
+        <item>Gampaha</item>
+        <item>Hambantota</item>
+        <item>Happutalle</item>
+        <item>Homagama</item>
+        <item>Jaffna</item>
+        <item>Kalmunai</item>
+        <item>Kalutata</item>
+        <item>Kandy</item>
+        <item>Kattankudy</item>
+        <item>Kegalle</item>
+        <item>Kinniya</item>
+        <item>Kuliyapitiya</item>
+        <item>Kurunegala</item>
+        <item>Mannar</item>
+        <item>Matale</item>
+        <item>Matara</item>
+        <item>Negombo</item>
+        <item>Nuwara Eliya</item>
+        <item>Point Pedro</item>
+        <item>Polonnaruwa</item>
+        <item>Ratnapura</item>
+        <item>Sri Jayewardenepura Kotte</item>
+        <item>Trincomalee</item>
+        <item>Valvettithurai</item>
+        <item>Vavuniya</item>
+    </string-array>
+</resources>

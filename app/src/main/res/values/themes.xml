@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.InternetSearch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.InternetSearch"
+        parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/yellow</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -10,8 +11,17 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/material_on_surface_stroke</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/material_on_surface_stroke</item>
+        <item name="android:windowDisablePreview">true</item>
+        <!-- Customize your theme here. -->
+        </style>
+    <style name="Theme.MyTheme" parent="android:style/Theme.Holo">
+        <!-- This disables the black preview screen -->
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="roundedImageViewRounded">
@@ -26,5 +36,11 @@
 
     <style name="Theme.InternetSearch.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.InternetSearch.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="Base.Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="colorAccent">@color/light_yellow</item>
+    </style>
+
+
 </resources>

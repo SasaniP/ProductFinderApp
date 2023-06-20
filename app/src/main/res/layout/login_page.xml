@@ -32,21 +32,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_password2"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
-    <View
-        android:id="@+id/divider_underline2"
-        android:layout_width="50dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="192dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="89dp"
-        android:background="@android:drawable/screen_background_dark"
-        android:foregroundTint="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toSignupPage"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/login2"
@@ -61,7 +46,7 @@
         android:background="@drawable/rounded_edittext"
         android:clickable="true"
         android:focusable="true"
-        android:text="@string/login"
+        android:text="@string/LOGINN"
         android:textColor="@color/black"
         app:iconTint="#FFC107"
         app:layout_constraintBottom_toTopOf="@+id/forgotPass"
@@ -74,7 +59,7 @@
         android:id="@+id/need_account_Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="27dp"
         android:layout_marginBottom="80dp"
         android:text="@string/need_a_account"
@@ -96,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dividerTxt2"
         app:layout_constraintTop_toTopOf="@+id/dividerTxt2"
-        app:layout_constraintVertical_bias="0.571" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <CheckBox
         android:id="@+id/remembermeBox2"
@@ -158,16 +143,16 @@
 
     <TextView
         android:id="@+id/forgotPass"
-        android:layout_width="116dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:clickable="true"
         android:focusable="true"
-        android:minHeight="48dp"
+
         android:text="@string/forgot_password"
         app:layout_constraintBottom_toTopOf="@+id/dividerTxt2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintHorizontal_bias="0.823"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login2" />
 
@@ -233,18 +218,17 @@
 
     <TextView
         android:id="@+id/toSignupPage"
-        android:layout_width="58dp"
-        android:layout_height="18dp"
-        android:layout_marginEnd="90dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
         android:clickable="true"
         android:focusable="true"
-        android:minHeight="48dp"
         android:onClick="go_to_sign_in"
         android:text="@string/tosign_up"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/need_account_Txt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/need_account_Txt"
         app:layout_constraintTop_toTopOf="@+id/need_account_Txt"
         app:layout_constraintVertical_bias="0.0" />
@@ -259,7 +243,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="55dp"
         android:gravity="center"
-        android:text="@string/login"
+        android:text="@string/LOGINN"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"

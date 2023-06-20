@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="10dp"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     android:background="@color/black"
-    >
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".MainActivity">
 
 
     <TextView
@@ -38,10 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/startBtn"
         android:layout_alignParentTop="true"
-
         android:layout_alignParentEnd="true"
         android:layout_marginTop="140dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginEnd="84dp"
         android:layout_marginBottom="191dp"
         android:fontFamily="@font/andada"
         android:text="@string/r"
@@ -60,7 +58,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="80dp"
-        android:layout_marginBottom="176dp"
+        android:layout_marginBottom="175dp"
         android:layout_toEndOf="@+id/txt_main"
         android:background="@color/black"
         android:clickable="true"
@@ -79,9 +77,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="70dp"
+        android:layout_marginStart="91dp"
         android:layout_marginTop="150dp"
-        android:layout_marginBottom="202dp"
+        android:layout_marginBottom="200dp"
         android:fontFamily="@font/andada"
         android:text="Start browsing"
         android:textAllCaps="true"

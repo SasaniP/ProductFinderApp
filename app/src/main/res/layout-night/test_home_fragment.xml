@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:usesCleartextTraffic="true"
-    tools:context=".HomeFragment"
-    app:layout_behavior="appbar_scrolling_view_behavior">
+    app:layout_behavior="appbar_scrolling_view_behavior"
+    tools:context=".HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -28,10 +29,10 @@
                 android:layout_height="50dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/darkGrey"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/ic_search_light"
-                android:backgroundTint="@color/midGrey"
+                android:src="@drawable/ic__search"
                 android:text="@string/search"
                 android:textColor="@color/brown"
                 android:textSize="12sp"
@@ -53,18 +54,18 @@
                 app:layout_constraintEnd_toStartOf="@+id/b_search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintVertical_bias="0.129">
 
                 <EditText
                     android:id="@+id/et_search"
                     android:layout_width="260dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:backgroundTint="@color/midGrey"
+                    android:background="@drawable/rounded_edittext_dark"
                     android:hint="@string/search_here"
                     android:inputType="text"
-                    android:padding="8dp"
-                    android:textColorHint="@color/darkGrey"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/b_search"
                     app:layout_constraintStart_toStartOf="parent"
@@ -95,56 +96,41 @@
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@android:drawable/editbox_background"
-                android:drawableEnd="@drawable/arrow_drop_down"
+                android:background="@android:drawable/editbox_background_normal"
+                android:backgroundTint="@color/darkGrey"
+                android:drawableEnd="@drawable/arrow_drop_down_white"
                 android:gravity="center_vertical"
                 android:hint="@string/SelectLocation"
                 android:padding="7dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintHorizontal_bias="0.94"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.99" />
+                app:layout_constraintVertical_bias="0.971" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-            <LinearLayout
-                android:layout_width="190dp"
+            <TextView
+                android:id="@+id/results_number"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingLeft="15dp">
+                android:hint="Searched for.."
+                android:padding="2dp" />
 
-                <TextView
-                    android:id="@+id/results_number"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_gravity="fill_vertical"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="220dp"
+            <TextView
+                android:id="@+id/top_textview"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/top_textview"
-                    android:gravity="center"
-                    android:layout_gravity="fill_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:autofillHints="Searched for.."
-                    android:hint="Searched for.."
-                    android:paddingRight="5dp" />
-            </LinearLayout>
-
+                android:hint="Searched for.."
+                android:padding="2dp" />
 
         </LinearLayout>
 
@@ -158,8 +144,7 @@
                 android:id="@+id/pb"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="370dp"
-                android:layout_height="5dp"
-                />
+                android:layout_height="5dp" />
 
         </LinearLayout>
 
@@ -170,7 +155,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>
